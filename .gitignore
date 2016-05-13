@@ -7,6 +7,9 @@ logs
 *.log
 npm-debug.log*
 
+### Transpiled files
+build/*
+
 # Runtime data
 pids
 *.pid
