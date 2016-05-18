@@ -3,53 +3,49 @@ import GitHubApi from 'github';
 import Promise from 'bluebird';
 
 const github = new GitHubApi({
-    version: "3.0.0",
-    //debug: true,
-    protocol: "https",
-    timeout: 5000,
-    headers: {
-        "user-agent": "GitHub-Copy-Teams" // GitHub is happy with a unique user agent
-    }
+  version: "3.0.0",
+  protocol: "https",
+  timeout: 5000,
+  headers: {
+    "user-agent": "GitHub-Copy-Teams" // GitHub is happy with a unique user agent
+  }
 });
 
 github.authenticate({
-    type: "basic",
-    username: config.github.userName,
-    password: config.github.password
+  type: "basic",
+  username: config.github.userName,
+  password: config.github.password
 });
 
 
 /** Promise based APIs FTW! **/
-const getOrg            = Promise.promisify(github.orgs.get);
+const getOrg                   = Promise.promisify(github.orgs.get);
+const getUserOrgs              = Promise.promisify(github.user.getOrgs);
 export const getOrgTeams       = Promise.promisify(github.orgs.getTeams);
 export const getOrgTeamMembers = Promise.promisify(github.orgs.getTeamMembers);
-const getUserOrgs       = Promise.promisify(github.user.getOrgs);
 
+let orgIdsOfUser;
+getUserOrgs({}).then((orgs) => {
+  orgIdsOfUser = orgs.map(org => org.id);
+});
 
-export const validateOrgs = (orgsToValidate) => {
-	let orgIdsOfUser;
+export const validateOrg = (orgToValidate, doneFn) => {
 
-	const assertIfOrgIsValid = (orgName) => {
-		if (!orgName || orgName.trim() === '') {
-			console.error(`${orgName} is not a valid org name`);
-			process.exit(1);
-		}
-		getOrg({ org: orgName}).then((org)=> {
-			if (orgIdsOfUser.indexOf(org.id) === -1) {
-				console.error(`User doesn't belong to ${orgName} and its required for this script to work`);
-				process.exit(1);
-			}
-		}, () => {
-			console.error(`${orgName} doesn't exist on GitHub`);
-			process.exit(1);
-		});
-	};
+  const assertIfOrgIsValid = (orgName) => {
+    if (!orgName || orgName.trim() === '') {
+      return doneFn(`Enter a valid org name`);
+    }
+    getOrg({ org: orgName}).then((org)=> {
+      if (orgIdsOfUser.indexOf(org.id) === -1) {
+        return doneFn(`User doesn't belong to ${orgName} and its required for this script to work`);
+      }
+      return doneFn(true);
+    }, () => {
+      return doneFn(`${orgName} doesn't exist on GitHub`);
+    });
+  };
 
-	getUserOrgs({}).then(function(orgs) {
-		orgIdsOfUser = orgs.map(org => org.id);
-		orgsToValidate.map(assertIfOrgIsValid);
-	});
+  assertIfOrgIsValid(orgToValidate);
 
 };
-
 
