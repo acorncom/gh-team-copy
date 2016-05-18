@@ -23,6 +23,7 @@ const getOrg                   = Promise.promisify(github.orgs.get);
 const getUserOrgs              = Promise.promisify(github.user.getOrgs);
 export const getOrgTeams       = Promise.promisify(github.orgs.getTeams);
 export const getOrgTeamMembers = Promise.promisify(github.orgs.getTeamMembers);
+export const createTeam = Promise.promisify(github.orgs.createTeam);
 
 let orgIdsOfUser;
 getUserOrgs({}).then((orgs) => {

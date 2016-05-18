@@ -1,4 +1,5 @@
 import {
+  createTeam,
   getOrgTeamMembers,
   getOrgTeams,
   validateOrg,
@@ -15,14 +16,14 @@ import inquirer from 'inquirer';
  */
 const gatherRepoNames = inquirer.prompt([{
   type: 'input',
-  name: 'sourceRepoName',
+  name: 'sourceOrgName',
   message: 'Source github org',
   validate: (orgToValidate) => new Promise((resolve) => {
     validateOrg(orgToValidate, resolve);
   }),
 }, {
   type: 'input',
-  name: 'targetRepoName',
+  name: 'targetOrgName',
   message: 'Target github org',
   validate: (orgToValidate) => new Promise((resolve) => {
     validateOrg(orgToValidate, resolve);
@@ -44,15 +45,51 @@ const findTeamsToCopy = (teams) => {
   });
 };
 
-gatherRepoNames.then(repoNames => {
+let sourceOrgName, targetOrgName;
 
-  const {sourceRepoName, targetRepoName} = repoNames;
+let actionsPerformed = {
+  teamsSkipped: [],
+  teamsCreated: [],
+  membersInvited: [],
+};
 
-  getOrgTeams({org: sourceRepoName})
-    .then(findTeamsToCopy)
-    .then(teamsToCopy => {
-    console.log(teamsToCopy);
+const copyTeams = (teamsToCopy) => {
+  let teamCreationPromises = [];
+  return getOrgTeams({ org: targetOrgName }).then(targetRepoTeams => {
+    const targetRepoTeamsSlugs = targetRepoTeams.map(team => { return team.slug });
+
+    teamsToCopy.map(teamInfo => {
+      if (targetRepoTeamsSlugs.indexOf(teamInfo.slug) === -1) {
+        teamCreationPromises.push(
+          createTeam({
+            org: targetOrgName,
+            name: teamInfo.name,
+            permission: teamInfo.permission,
+          })
+        )
+        actionsPerformed.teamsCreated.push(teamInfo.name);
+      } else {
+        actionsPerformed.teamsSkipped.push(teamInfo.name);
+      }
+    });
+
+    return Promise.all(teamCreationPromises).then(teams => {
+      targetRepoTeams = targetRepoTeams.concat(teams);
+      return Promise.resolve({ teamsToCopy, targetRepoTeams });
+    });
+  }).then(({teamsToCopy, targetRepoTeams}) => {
+    targetRepoTeams.map(team => {
+      console.log(team);
+    });
   });
+};
+
+gatherRepoNames.then(repoNames => {
+  sourceOrgName = repoNames.sourceOrgName;
+  targetOrgName = repoNames.targetOrgName;
+
+  getOrgTeams({org: sourceOrgName})
+    .then(findTeamsToCopy)
+    .then(copyTeams);
 
 });
-
