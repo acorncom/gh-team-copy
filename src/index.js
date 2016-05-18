@@ -47,13 +47,11 @@ const findTeamsToCopy = (teams) => {
 gatherRepoNames.then(repoNames => {
 
   const {sourceRepoName, targetRepoName} = repoNames;
-  let sourceRepoTeams;
 
-  getOrgTeams({org: sourceRepoName}).then(teams => {
-    sourceRepoTeams = teams;
-    findTeamsToCopy(teams).then(teamsToCopy => {
-      console.log(teamsToCopy);
-    });
+  getOrgTeams({org: sourceRepoName})
+    .then(findTeamsToCopy)
+    .then(teamsToCopy => {
+    console.log(teamsToCopy);
   });
 
 });
