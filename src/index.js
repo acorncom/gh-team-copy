@@ -8,11 +8,8 @@ import Promise from 'bluebird';
 import inquirer from 'inquirer';
 
 /**
- *
- * 1. Get all team + its members info from both source and target orgs
- * 2. If a team name from parent org doesn't exist in the target, create it
- * 3. If someone from parent team doesn't belong to target org's team, add them
  * 4. Give a summary of actions taken at the end
+ * retain public visibility levels
  */
 const gatherRepoNames = inquirer.prompt([{
   type: 'input',
