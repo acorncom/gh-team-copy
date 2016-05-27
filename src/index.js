@@ -63,7 +63,8 @@ const copyTeams = (teamsToCopy) => {
           createTeam({
             org: targetOrgName,
             name: teamInfo.name,
-            permission: teamInfo.permission,
+            description: teamInfo.description,
+            privacy: teamInfo.privacy,
           })
         )
         actionsPerformed.teamsCreated.push(teamInfo.name);
