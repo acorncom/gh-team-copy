@@ -1,6 +1,7 @@
 import config from './config';
 import GitHubApi from 'github4';
 import Promise from 'bluebird';
+import chalk from 'chalk';
 
 const github = new GitHubApi({
   version: '3.0.0',
@@ -8,6 +9,14 @@ const github = new GitHubApi({
   timeout: 5000,
   headers: {
     'user-agent': 'GitHub-Copy-Teams' // GitHub is happy with a unique user agent
+  }
+});
+
+Object.keys(config.github).map(key => {
+  const val = config.github[key];
+  if (!val || val.trim() === '') {
+    console.log(chalk.red.bold(`Set github ${key} in env`));
+    process.exit(1);
   }
 });
 
