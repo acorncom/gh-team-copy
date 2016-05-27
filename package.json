@@ -1,6 +1,6 @@
 {
   "name": "gh-team-copy",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "description": "Copy teams and members from an existing org to a new one",
   "main": "build/index.js",
   "bin": {
@@ -23,5 +23,17 @@
     "chalk": "1.1.3",
     "github4": "1.1.0",
     "inquirer": "1.0.2"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ember-learn/gh-team-copy.git"
+  },
+  "keywords": [
+    "github",
+    "teams"
+  ],
+  "bugs": {
+    "url": "https://github.com/ember-learn/gh-team-copy/issues"
+  },
+  "homepage": "https://github.com/ember-learn/gh-team-copy"
 }
