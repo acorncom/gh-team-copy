@@ -1,5 +1,5 @@
 import config from './config';
-import GitHubApi from 'github';
+import GitHubApi from 'github4';
 import Promise from 'bluebird';
 
 const github = new GitHubApi({
@@ -20,7 +20,7 @@ github.authenticate({
 
 /** Promise based APIs FTW! **/
 const getOrg                   = Promise.promisify(github.orgs.get);
-const getUserOrgs              = Promise.promisify(github.user.getOrgs);
+const getUserOrgs              = Promise.promisify(github.users.getOrgs);
 export const addToTeam         = Promise.promisify(github.orgs.addTeamMembership);
 export const createTeam        = Promise.promisify(github.orgs.createTeam);
 export const getTeamMembers    = Promise.promisify(github.orgs.getTeamMembers);
