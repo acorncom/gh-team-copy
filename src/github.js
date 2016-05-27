@@ -3,16 +3,16 @@ import GitHubApi from 'github';
 import Promise from 'bluebird';
 
 const github = new GitHubApi({
-  version: "3.0.0",
-  protocol: "https",
+  version: '3.0.0',
+  protocol: 'https',
   timeout: 5000,
   headers: {
-    "user-agent": "GitHub-Copy-Teams" // GitHub is happy with a unique user agent
+    'user-agent': 'GitHub-Copy-Teams' // GitHub is happy with a unique user agent
   }
 });
 
 github.authenticate({
-  type: "basic",
+  type: 'basic',
   username: config.github.userName,
   password: config.github.password
 });
@@ -21,9 +21,10 @@ github.authenticate({
 /** Promise based APIs FTW! **/
 const getOrg                   = Promise.promisify(github.orgs.get);
 const getUserOrgs              = Promise.promisify(github.user.getOrgs);
+export const addToTeam         = Promise.promisify(github.orgs.addTeamMembership);
+export const createTeam        = Promise.promisify(github.orgs.createTeam);
+export const getTeamMembers    = Promise.promisify(github.orgs.getTeamMembers);
 export const getOrgTeams       = Promise.promisify(github.orgs.getTeams);
-export const getOrgTeamMembers = Promise.promisify(github.orgs.getTeamMembers);
-export const createTeam = Promise.promisify(github.orgs.createTeam);
 
 let orgIdsOfUser;
 getUserOrgs({}).then((orgs) => {
