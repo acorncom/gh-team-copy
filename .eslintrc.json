@@ -1,0 +1,8 @@
+{
+  "parser": "babel-eslint",
+  "rules": {
+    "strict": 0,
+    "indent": ["error", 2],
+    "no-console": "off"
+  }
+}

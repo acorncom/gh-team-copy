@@ -2,23 +2,25 @@ import Promise from 'bluebird';
 import inquirer from 'inquirer';
 import { validateOrg } from './github';
 
-export const gatherRepoNames = inquirer.prompt([{
-  type: 'input',
-  name: 'sourceOrgName',
-  message: 'Source github org',
-  validate: (orgToValidate) => new Promise((resolve) => {
-    validateOrg(orgToValidate, resolve);
-  })
-}, {
-  type: 'input',
-  name: 'targetOrgName',
-  message: 'Target github org',
-  validate: (orgToValidate) => new Promise((resolve) => {
-    validateOrg(orgToValidate, resolve);
-  })
-}]);
+export const promptForOrgs = () => {
+  return inquirer.prompt([{
+    type: 'input',
+    name: 'sourceOrgName',
+    message: 'Source github org',
+    validate: (orgToValidate) => new Promise((resolve) => {
+      validateOrg(orgToValidate, resolve);
+    })
+  }, {
+    type: 'input',
+    name: 'targetOrgName',
+    message: 'Target github org',
+    validate: (orgToValidate) => new Promise((resolve) => {
+      validateOrg(orgToValidate, resolve);
+    })
+  }]);
+};
 
-export const findTeamsToCopy = (teams) => {
+export const promptForTeamsToCopy = (teams) => {
   return inquirer.prompt([{
     type: 'checkbox',
     name: 'teamsToCopy',
