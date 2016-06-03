@@ -1,5 +1,5 @@
 import config from './config';
-import GitHubApi from 'github4';
+import GitHubApi from 'github';
 import Promise from 'bluebird';
 import chalk from 'chalk';
 

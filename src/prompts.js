@@ -1,6 +1,6 @@
 import Promise from 'bluebird';
 import inquirer from 'inquirer';
-
+import { validateOrg } from './github';
 
 export const gatherRepoNames = inquirer.prompt([{
   type: 'input',
