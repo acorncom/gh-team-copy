@@ -6,6 +6,7 @@ import chalk from 'chalk';
 const github = new GitHubApi({
   version: '3.0.0',
   protocol: 'https',
+  debug: config.debug,
   timeout: 5000,
   headers: {
     'user-agent': 'GitHub-Copy-Teams' // GitHub is happy with a unique user agent
@@ -34,6 +35,7 @@ export const addToTeam      = Promise.promisify(github.orgs.addTeamMembership);
 export const createTeam     = Promise.promisify(github.orgs.createTeam);
 export const getTeamMembers = Promise.promisify(github.orgs.getTeamMembers);
 export const getOrgTeams    = Promise.promisify(github.orgs.getTeams);
+export const getReposForOrg = Promise.promisify(github.repos.getForOrg);
 
 let orgIdsOfUser;
 getUserOrgs({}).then((orgs) => {
