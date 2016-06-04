@@ -8,11 +8,7 @@ import {
 } from './github';
 import { promptForOrgs, promptForTeamsToCopy } from './prompts';
 import Promise from 'bluebird';
-import chalk from 'chalk';
-
-const sectionHeader = chalk.red.bold.underline;
-const subHeader = chalk.green.bold.underline;
-const items = chalk.blue;
+import summarize from './summary';
 
 (async function main() {
   let actionsPerformed = {
@@ -71,19 +67,6 @@ const items = chalk.blue;
   });
 
   await Promise.all(addMembersPromises);
-
-  // finally!!!
-  if (actionsPerformed.teamsCreated.length > 0) {
-    console.log('\n' + sectionHeader('Teams created:') +' ' + actionsPerformed.teamsCreated.join(', '));
-  }
-
-  if (actionsPerformed.teamsSkipped.length > 0) {
-    console.log('\n' + sectionHeader('Teams skipped(because they already exist):') + ' ' + actionsPerformed.teamsSkipped.join(', '));
-  }
-
-  Object.keys(actionsPerformed.membersCopied).map(teamName => {
-    console.log('\n' + subHeader('Team name:') + ' ' + teamName);
-    console.log(items('Members: ' ) + ' ' + actionsPerformed.membersCopied[teamName].join(', ') +'\n');
-  });
+  summarize(actionsPerformed);
 
 })();
