@@ -4,9 +4,15 @@ import {
   addToTeam,
   createTeam,
   getOrgTeams,
+  getReposForOrg,
   getTeamMembers
 } from './github';
-import { promptForOrgs, promptForTeamsToCopy } from './prompts';
+import {
+  promptForOrgs,
+  promptForReposToAssociate,
+  promptForTeamsToCopy
+} from './prompts';
+
 import Promise from 'bluebird';
 import summarize from './summary';
 
@@ -14,37 +20,50 @@ import summarize from './summary';
   let actionsPerformed = {
     teamsSkipped: [],
     teamsCreated: [],
-    membersCopied: {}
+    membersCopied: {},
+    associatedRepos: {}
   };
 
   let orgs = await promptForOrgs();
   let { sourceOrgName, targetOrgName } = orgs;
 
-  const sourceOrgTeams = await getOrgTeams({org: sourceOrgName});
+  const sourceOrgTeams = await getOrgTeams({ org: sourceOrgName });
   let targetOrgTeams = await getOrgTeams({ org: targetOrgName });
 
   const teamsToCopy = await promptForTeamsToCopy(sourceOrgTeams);
   const targetRepoTeamsSlugs = targetOrgTeams.map(team => { return team.slug; });
-  let teamCreationPromises = [];
 
-  teamsToCopy.map(teamInfo => {
+  const teamsToBeCreated = teamsToCopy.filter(teamInfo => {
+    actionsPerformed.membersCopied[teamInfo.name] = [];
     if (targetRepoTeamsSlugs.indexOf(teamInfo.slug) === -1) {
-      teamCreationPromises.push(
-        createTeam({
-          org: targetOrgName,
-          name: teamInfo.name,
-          description: teamInfo.description,
-          privacy: teamInfo.privacy
-        })
-      );
-      actionsPerformed.teamsCreated.push(teamInfo.name);
+      return teamInfo;
     } else {
       actionsPerformed.teamsSkipped.push(teamInfo.name);
+      return false;
     }
-    actionsPerformed.membersCopied[teamInfo.name] = [];
   });
 
-  let teams = await Promise.all(teamCreationPromises);
+  const targetOrgRepos = await getReposForOrg({ org: targetOrgName });
+
+  const createGHTeam = async function(teamInfo) {
+    let {reposToAssociate} = await promptForReposToAssociate(targetOrgRepos, teamInfo.name);
+
+    actionsPerformed.teamsCreated.push(teamInfo.name);
+    actionsPerformed.associatedRepos[teamInfo.name] = reposToAssociate;
+
+    reposToAssociate = reposToAssociate.map(repo => `${targetOrgName}/${repo}`);
+
+    return await createTeam({
+      org: targetOrgName,
+      name: teamInfo.name,
+      description: teamInfo.description,
+      privacy: teamInfo.privacy,
+      repo_names: reposToAssociate
+    });
+  };
+
+  let teams = await Promise.mapSeries(teamsToBeCreated, createGHTeam);
+  console.log(teams);
   targetOrgTeams = targetOrgTeams.concat(teams);
 
   const sourceTeamMemberInfo = await Promise.all(
@@ -58,10 +77,10 @@ import summarize from './summary';
   sourceTeamMemberInfo.map(team => {
     targetOrgTeams.filter(t => t.slug === team.id).map(targetTeam => {
       team.members.map(member => {
-        actionsPerformed.membersCopied[targetTeam.name].push(member);
         addMembersPromises.push(
-          addToTeam({ id: targetTeam.id, user: member})
+          addToTeam({ id: targetTeam.id, user: member })
         );
+        actionsPerformed.membersCopied[targetTeam.name].push(member);
       });
     });
   });

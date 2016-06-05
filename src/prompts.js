@@ -35,4 +35,14 @@ export const promptForTeamsToCopy = (teams) => {
   });
 };
 
+export const promptForReposToAssociate = (repos, teamName) => {
+  return inquirer.prompt([{
+    type: 'checkbox',
+    name: 'reposToAssociate',
+    message: `Select repos to associate to team '${teamName}'`,
+    choices: repos.map(repo => {
+      return { name: repo.name, checked: true };
+    })
+  }]);
+};
 

@@ -15,7 +15,11 @@ export default function(actionsPerformed) {
 
   Object.keys(actionsPerformed.membersCopied).map(teamName => {
     console.log('\n' + subHeader('Team name:') + ' ' + teamName);
-    console.log(items('Members: ' ) + ' ' + actionsPerformed.membersCopied[teamName].join(', ') +'\n');
+    console.log(items('Members: ' ) + ' ' + actionsPerformed.membersCopied[teamName].join(', '));
+    if (actionsPerformed.associatedRepos[teamName]) {
+      console.log(items('Repos associated: ') + ' ' + actionsPerformed.associatedRepos[teamName].join(', '));
+    }
+    console.log('\n');
   });
 }
 
