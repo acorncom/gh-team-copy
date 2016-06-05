@@ -63,7 +63,6 @@ import summarize from './summary';
   };
 
   let teams = await Promise.mapSeries(teamsToBeCreated, createGHTeam);
-  console.log(teams);
   targetOrgTeams = targetOrgTeams.concat(teams);
 
   const sourceTeamMemberInfo = await Promise.all(
