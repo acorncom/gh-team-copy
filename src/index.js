@@ -1,12 +1,6 @@
 #!/usr/bin/env node
 
-import {
-  addToTeam,
-  createTeam,
-  getOrgTeams,
-  getReposForOrg,
-  getTeamMembers
-} from './github';
+import getAuthGHApi from './github';
 import {
   promptForOrgs,
   promptForReposToAssociate,
@@ -17,6 +11,15 @@ import Promise from 'bluebird';
 import summarize from './summary';
 
 (async function main() {
+  const {
+    addToTeam,
+    createTeam,
+    getOrgTeams,
+    getReposForOrg,
+    getTeamMembers,
+    validateOrg
+  } = await getAuthGHApi();
+
   let actionsPerformed = {
     teamsSkipped: [],
     teamsCreated: [],
@@ -24,7 +27,7 @@ import summarize from './summary';
     associatedRepos: {}
   };
 
-  let orgs = await promptForOrgs();
+  let orgs = await promptForOrgs(validateOrg);
   let { sourceOrgName, targetOrgName } = orgs;
 
   const sourceOrgTeams = await getOrgTeams({ org: sourceOrgName });

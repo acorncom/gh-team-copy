@@ -1,8 +1,25 @@
 import Promise from 'bluebird';
 import inquirer from 'inquirer';
-import { validateOrg } from './github';
 
-export const promptForOrgs = () => {
+export const promptForGHCreds = () => {
+  return inquirer.prompt([{
+    type: 'input',
+    name: 'userName',
+    message: 'Github user name',
+    validate: (userName) => {
+      return (userName && userName.trim() !== '');
+    }
+  }, {
+    type: 'input',
+    name: 'password',
+    message: 'Github password(token in case of 2FA)',
+    validate: (pwd) => {
+      return (pwd && pwd.trim() !== '');
+    }
+  }]);
+};
+
+export const promptForOrgs = (validateOrg) => {
   return inquirer.prompt([{
     type: 'input',
     name: 'sourceOrgName',
