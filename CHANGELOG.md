@@ -1,3 +1,7 @@
+v6.0.0
+======
+- Oh well, we no longer save creds since folks were little paranoid on that.
+
 v5.0.0
 ======
 - One time prompt for user creds & load from an encrypted config file for subsequent runs
