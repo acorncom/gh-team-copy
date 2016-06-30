@@ -1,6 +1,6 @@
 v6.0.0
 ======
-- Oh well, we no longer save creds since folks were little paranoid on that.
+- Decided to skip saving credentials to disk per core feedback
 
 v5.0.0
 ======
