@@ -21,5 +21,10 @@ export default function(actionsPerformed) {
     }
     console.log('\n');
   });
+
+  console.log(`Members who don't belong to the target team have been invited.
+They should ${chalk.bold('accept')} their invites to have repo access.`);
+  console.log('\n');
+
 }
 
