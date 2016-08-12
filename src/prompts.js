@@ -10,7 +10,7 @@ export const promptForGHCreds = () => {
       return (userName && userName.trim() !== '');
     }
   }, {
-    type: 'input',
+    type: 'password',
     name: 'password',
     message: 'Github password(token in case of 2FA)',
     validate: (pwd) => {
