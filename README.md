@@ -3,7 +3,7 @@
 [![Latest NPM release][npm-badge]][npm-badge-url]
 [npm-badge]: https://img.shields.io/npm/v/gh-team-copy.svg
 [npm-badge-url]: https://www.npmjs.com/package/gh-team-copy
-
+[![dependencies Status](https://david-dm.org/ember-learn/gh-team-copy/status.svg)](https://david-dm.org/ember-learn/gh-team-copy)
 
 Copy teams, invite members to a new organization from an existing organization.
 

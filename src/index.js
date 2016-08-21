@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import getAuthGHApi from './github';
+import createAuthenticatedGithubChannel from './github';
 import {
   promptForOrgs,
   promptForReposToAssociate,
@@ -18,7 +18,7 @@ import summarize from './summary';
     getReposForOrg,
     getTeamMembers,
     validateOrg
-  } = await getAuthGHApi();
+  } = await createAuthenticatedGithubChannel();
 
   let actionsPerformed = {
     teamsSkipped: [],

@@ -23,7 +23,7 @@
   "dependencies": {
     "bluebird": "3.4.1",
     "chalk": "1.1.3",
-    "github": "2.4.1",
+    "github": "2.5.1",
     "inquirer": "1.1.2"
   },
   "repository": {

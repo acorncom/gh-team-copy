@@ -1,8 +1,8 @@
 import chalk from 'chalk';
 
+const items         = chalk.blue;
 const sectionHeader = chalk.red.bold.underline;
-const subHeader = chalk.green.bold.underline;
-const items = chalk.blue;
+const subHeader     = chalk.green.bold.underline;
 
 export default function(actionsPerformed) {
   if (actionsPerformed.teamsCreated.length > 0) {
