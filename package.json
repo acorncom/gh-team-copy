@@ -1,6 +1,6 @@
 {
   "name": "gh-team-copy",
-  "version": "6.0.1",
+  "version": "6.0.2",
   "description": "Copy teams and members from an existing org to a new one",
   "main": "build/index.js",
   "bin": {
