@@ -1,6 +1,7 @@
 import getConfig from './config';
 import GitHubApi from 'github';
 import Promise from 'bluebird';
+import chalk from 'chalk';
 
 export default async function initGithub() {
 
@@ -15,6 +16,11 @@ export default async function initGithub() {
     headers: {
       'user-agent': 'GitHub-Copy-Teams'
     }
+  });
+
+  process.on('unhandledRejection', (err) => {
+    console.error(chalk.red.bold(`\n Unexpected error. Reason: ${err.message}`));
+    process.exit();
   });
 
   github.authenticate({

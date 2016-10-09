@@ -89,5 +89,4 @@ import summarize from './summary';
 
   await Promise.all(addMembersPromises);
   summarize(actionsPerformed);
-
 })();
